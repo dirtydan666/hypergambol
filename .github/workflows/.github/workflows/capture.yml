@@ -1,0 +1,59 @@
+name: capture
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: harness-data
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Capture
+        env:
+          FINNHUB_KEY: ${{ secrets.FINNHUB_KEY }}
+          POLYGON_KEY: ${{ secrets.POLYGON_KEY }}
+          COINGECKO_KEY: ${{ secrets.COINGECKO_KEY }}
+        run: python -m harness.capture
+
+      - name: Score anything due
+        env:
+          FINNHUB_KEY: ${{ secrets.FINNHUB_KEY }}
+          POLYGON_KEY: ${{ secrets.POLYGON_KEY }}
+          COINGECKO_KEY: ${{ secrets.COINGECKO_KEY }}
+        run: python -m harness.score
+
+      - name: Rebuild scorecard
+        run: python -m harness.report
+
+      - name: Commit the capture
+        run: |
+          git config user.name "harness"
+          git config user.email "harness@users.noreply.github.com"
+          git add data/
+          if git diff --staged --quiet; then
+            echo "nothing new"
+            exit 0
+          fi
+          git commit -m "capture $(date -u +'%Y-%m-%dT%H:%MZ')"
+          for attempt in 1 2 3; do
+            git pull --rebase --autostash && git push && exit 0
+            sleep $((attempt * 5))
+          done
+          exit 1
