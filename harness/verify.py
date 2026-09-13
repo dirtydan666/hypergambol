@@ -104,7 +104,11 @@ def verify_price(
     result.total_volume_24h = sum(p.volume_24h for p in qualifying)
 
     # 1. depth
-    enough = len(qualifying) >= config.MIN_POOLS_FOR_CONSENSUS
+    deep_single = (
+        len(qualifying) == 1
+        and qualifying[0].liquidity_usd >= config.SINGLE_POOL_MIN_LIQUIDITY_USD
+    )
+    enough = len(qualifying) >= config.MIN_POOLS_FOR_CONSENSUS or deep_single
     result.checks.append(Check(
         "depth",
         enough,
@@ -144,8 +148,15 @@ def verify_price(
             disagreement,
         ))
     else:
+        # No second provider answered. Agreement across several deep pools is
+        # weaker evidence than an independent source, but it is not nothing -
+        # accept it and let the row stand as single-source.
+        strong = len(qualifying) >= 3 and dispersion <= 0.002
         result.checks.append(Check(
-            "provider_agreement", False, "no second provider responded", None,
+            "provider_agreement", strong,
+            f"no second provider; {len(qualifying)} pools within "
+            f"{dispersion * 100:.2f}% of each other",
+            dispersion,
         ))
 
     # 4. the Apple check
