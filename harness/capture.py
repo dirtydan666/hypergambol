@@ -11,9 +11,9 @@ import sys
 import time
 
 from . import store
-from .signals import basis, perps
+from .signals import basis, meta, perps
 
-SIGNALS = [basis, perps]
+SIGNALS = [basis, perps, meta]
 
 STATUS_MARK = {
     "tradeable": "***",
