@@ -12,13 +12,16 @@ from __future__ import annotations
 import time
 
 from . import config, store
-from .signals import basis
+from .signals import basis, perps
 
-SIGNALS = {basis.SIGNAL: basis}
-HORIZONS = {basis.SIGNAL: config.BASIS_HORIZONS_HOURS}
+SIGNALS = {basis.SIGNAL: basis, perps.SIGNAL: perps}
+HORIZONS = {
+    basis.SIGNAL: config.BASIS_HORIZONS_HOURS,
+    perps.SIGNAL: perps.HORIZONS_HOURS,
+}
 
 # Only grade candidates the board would have shown as meaningful.
-GRADEABLE_STATUSES = {"tradeable", "not_fillable", "clean_no_trade"}
+GRADEABLE_STATUSES = {"tradeable", "not_fillable", "clean_no_trade", "fired"}
 
 
 def main() -> int:
@@ -62,8 +65,9 @@ def main() -> int:
     for o in graded:
         print(
             f"  {o['ticker']:<5} {o['horizon_hours']:>3}h  "
-            f"entry {o['entry_basis_bps']:+5}bps -> exit {o['exit_basis_bps']:+5}bps  "
-            f"{'converged' if o['converged'] else 'widened'}"
+            f"{o.get('ticker') or o.get('coin') or '-':<6} "
+            f"{o.get('edge_bps', o.get('captured_bps', 0)):+5}bps  "
+            f"{'right' if o.get('profitable') else 'wrong'}"
         )
     return 0
 
