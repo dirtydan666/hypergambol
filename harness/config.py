@@ -52,6 +52,9 @@ MIN_POOL_LIQUIDITY_USD = 50_000
 # Need at least this many qualifying pools before a print is believable.
 MIN_POOLS_FOR_CONSENSUS = 2
 
+# ...unless a single pool is deep enough to be a price on its own.
+SINGLE_POOL_MIN_LIQUIDITY_USD = 250_000
+
 # Max spread across qualifying pools before we call the token unpriceable.
 MAX_POOL_DISPERSION = 0.005          # 0.5%
 
