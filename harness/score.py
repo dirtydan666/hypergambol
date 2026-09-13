@@ -64,9 +64,13 @@ def main() -> int:
     graded = [o for o in outcomes if o.get("status") == "scored"]
     print(f"{len(outcomes)} outcomes written, {len(graded)} graded")
     for o in graded:
+        # Signals name their subject differently. Assuming "ticker" here crashed
+        # the whole step the moment a perps outcome was graded - and because the
+        # outcomes are written before this print, the crash failed the job AFTER
+        # the work was done, so nothing got committed and every grade was lost.
+        who = o.get("ticker") or o.get("coin") or o.get("venue") or "-"
         print(
-            f"  {o['ticker']:<5} {o['horizon_hours']:>3}h  "
-            f"{o.get('ticker') or o.get('coin') or '-':<6} "
+            f"  {o.get('signal', '?'):<6} {who:<8} {o['horizon_hours']:>3}h  "
             f"{o.get('edge_bps', o.get('captured_bps', 0)):+5}bps  "
             f"{'right' if o.get('profitable') else 'wrong'}"
         )
