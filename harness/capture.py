@@ -11,12 +11,14 @@ import sys
 import time
 
 from . import store
-from .signals import basis
+from .signals import basis, perps
 
-SIGNALS = [basis]
+SIGNALS = [basis, perps]
 
 STATUS_MARK = {
     "tradeable": "***",
+    "fired": "***",
+    "market_summary": " . ",
     "not_fillable": " ~ ",
     "clean_no_trade": "   ",
     "rejected": " ! ",
@@ -47,7 +49,8 @@ def main() -> int:
         mark = STATUS_MARK.get(status, "   ")
         basis_bps = r.get("gross_basis_bps")
         shown = f"{basis_bps:+5d}bps" if basis_bps is not None else "    --   "
-        print(f"{mark} {r.get('ticker', '?'):<5} {shown}  {status:<15} {r.get('reason', '')}")
+        label = r.get('ticker') or r.get('coin') or '-'
+        print(f"{mark} {label:<6} {shown}  {status:<15} {r.get('reason', '')}")
 
     print(
         f"\n{len(all_records)} records, {tradeable} tradeable, "
