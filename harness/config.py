@@ -27,12 +27,12 @@ class Instrument:
 
 # Mints verified against DexScreener, Sept 2026.
 UNIVERSE: list[Instrument] = [
-    Instrument("AAPL", "Apple",       "solana", "XsbEhLAtcf6HdfpFZ5xEMdqW8nfAvcsP5bdudRLJzJp", perp="AAPL"),
-    Instrument("NVDA", "NVIDIA",      "solana", "Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh", perp="NVDA"),
-    Instrument("SPY",  "S&P 500 ETF", "solana", "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W", perp=None),
-    Instrument("TSLA", "Tesla",       "solana", "XsDoVfqeBukxuZHWhdvWHBhgEHjGNst4MLodqsJHzoB", perp="TSLA"),
-    Instrument("HOOD", "Robinhood",   "solana", "XsvNBAYkrDRNhA7wPHQfX3ZUXZyZLdnCQDfHZ56bzpg", perp="HOOD"),
-    Instrument("GME",  "GameStop",    "solana", "Xsf9mBktVB9BSU5kf4nHxPq5hCBJ2j2ui3ecFGxPRGc", perp=None),
+    Instrument("AAPL", "Apple",       "solana", "XsbEhLAtcf6HdfpFZ5xEMdqW8nfAvcsP5bdudRLJzJp", perp="xyz:AAPL"),
+    Instrument("NVDA", "NVIDIA",      "solana", "Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh", perp="xyz:NVDA"),
+    Instrument("SPY",  "S&P 500 ETF", "solana", "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W", perp="xyz:gme"),
+    Instrument("TSLA", "Tesla",       "solana", "XsDoVfqeBukxuZHWhdvWHBhgEHjGNst4MLodqsJHzoB", perp="xyz:TSLA"),
+    Instrument("HOOD", "Robinhood",   "solana", "XsvNBAYkrDRNhA7wPHQfX3ZUXZyZLdnCQDfHZ56bzpg", perp="xyz:HOOD"),
+    Instrument("GME",  "GameStop",    "solana", "Xsf9mBktVB9BSU5kf4nHxPq5hCBJ2j2ui3ecFGxPRGc", perp="xyz:gme"),
 ]
 
 STABLES = {"USDC", "USDT", "USDG", "USDY", "DAI", "syrupUSDC"}
