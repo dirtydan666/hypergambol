@@ -137,9 +137,11 @@ def detect() -> list[dict]:
         ok, failures = _verify(row)
         if ok:
             liquid.append(row)
-        elif failures and failures != ["open_interest"] and failures != ["volume"] \
-                and failures != ["open_interest", "volume"]:
-            # Illiquid markets are not worth a log line; genuinely broken data is.
+        elif "open_interest" not in failures and "volume" not in failures:
+            # Dead and delisted markets fail on liquidity and their stale marks
+            # drift from the oracle. Those are not findings, they are a graveyard
+            # - 17 of them per capture. Only a LIQUID market with broken data is
+            # worth a line in the log.
             records.append({
                 "candidate_id": _candidate_id(row["coin"], now),
                 "signal": SIGNAL, "version": VERSION, "detected_at": now,
