@@ -133,9 +133,15 @@ def _classify(row: dict, share: float, prev_share: float) -> tuple[str, str] | N
 
     momentum = row["fees_24h"] / average
 
-    if share_delta >= SHARE_SHIFT_PP or momentum >= MOMENTUM_HOT:
+    # Share alone lies when the whole market is shrinking. On the first live
+    # capture the launchpad market fell 16.6% in a day, and Pons "gained 5.2
+    # points of share" while its own revenue ran at 0.81x its weekly average -
+    # it did not win anything, it shrank more slowly than everyone else.
+    # So a share gain only counts as rotation IN if the venue is not itself
+    # contracting, and a share loss only counts as rotation OUT if it is.
+    if (share_delta >= SHARE_SHIFT_PP and momentum >= 1.0) or momentum >= MOMENTUM_HOT:
         return "rotation_in", "attention and launch volume moving toward this venue"
-    if share_delta <= -SHARE_SHIFT_PP or momentum <= MOMENTUM_COLD:
+    if (share_delta <= -SHARE_SHIFT_PP and momentum <= 1.0) or momentum <= MOMENTUM_COLD:
         return "rotation_out", "attention and launch volume leaving this venue"
     return None
 
