@@ -50,7 +50,10 @@ def build() -> dict:
 
     latest: dict[str, dict] = {}
     for c in candidates:
-        latest[c["ticker"]] = c
+        # Signals name their subject differently - basis has a ticker, perps a
+        # coin, and the market-summary row has neither.
+        subject = c.get("ticker") or c.get("coin") or c.get("status", "?")
+        latest[f"{c.get('signal', '?')}:{subject}"] = c
 
     return {
         "generated_at": max((c["detected_at"] for c in candidates), default=0),
