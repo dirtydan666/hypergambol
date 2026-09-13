@@ -22,6 +22,10 @@ DEXSCREENER = "https://api.dexscreener.com"
 COINGECKO = "https://api.coingecko.com/api/v3"
 JUPITER = "https://lite-api.jup.ag"
 HYPERLIQUID = "https://api.hyperliquid.xyz/info"
+
+# HIP-3 builder venue carrying the equity perps (trade.xyz). Coins are keyed
+# "xyz:AAPL", and they are invisible unless this dex is named in the request.
+EQUITY_DEX = "xyz"
 FINNHUB = "https://finnhub.io/api/v1"
 POLYGON = "https://api.polygon.io"
 
@@ -207,7 +211,7 @@ def hyperliquid_mids() -> dict[str, float]:
     (e.g. "trade:AAPL"); run `python -m harness.probe perps` once to see the
     exact keys on the venue before trusting config.Instrument.perp.
     """
-    data = post(HYPERLIQUID, json={"type": "allMids"}) or {}
+    data = post(HYPERLIQUID, json={"type": "allMids", "dex": EQUITY_DEX}) or {}
     out = {}
     for coin, mid in data.items():
         try:
@@ -218,7 +222,7 @@ def hyperliquid_mids() -> dict[str, float]:
 
 
 def hyperliquid_perp_meta() -> list[dict]:
-    data = post(HYPERLIQUID, json={"type": "meta"}) or {}
+    data = post(HYPERLIQUID, json={"type": "meta", "dex": EQUITY_DEX}) or {}
     return data.get("universe", [])
 
 
