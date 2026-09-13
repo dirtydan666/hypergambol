@@ -75,8 +75,11 @@ def to_markdown(report: dict) -> str:
     lines.append("")
     lines.append("| Status | Count |")
     lines.append("|---|---:|")
-    for status in ("tradeable", "not_fillable", "clean_no_trade", "rejected",
-                   "no_reference", "error"):
+    # Preferred order first, then anything a newer signal has invented, so a
+    # new signal's activity never silently vanishes from the scorecard.
+    order = ["tradeable", "fired", "not_fillable", "clean_no_trade",
+             "market_summary", "rejected", "no_reference", "error"]
+    for status in order + [s for s in counts if s not in order]:
         if status in counts:
             lines.append(f"| {status} | {counts[status]} |")
 
