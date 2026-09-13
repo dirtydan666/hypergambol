@@ -12,12 +12,13 @@ from __future__ import annotations
 import time
 
 from . import config, store
-from .signals import basis, perps
+from .signals import basis, meta, perps
 
-SIGNALS = {basis.SIGNAL: basis, perps.SIGNAL: perps}
+SIGNALS = {basis.SIGNAL: basis, perps.SIGNAL: perps, meta.SIGNAL: meta}
 HORIZONS = {
     basis.SIGNAL: config.BASIS_HORIZONS_HOURS,
     perps.SIGNAL: perps.HORIZONS_HOURS,
+    meta.SIGNAL: meta.HORIZONS_HOURS,
 }
 
 # Only grade candidates the board would have shown as meaningful.
