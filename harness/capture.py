@@ -49,7 +49,7 @@ def main() -> int:
         mark = STATUS_MARK.get(status, "   ")
         basis_bps = r.get("gross_basis_bps")
         shown = f"{basis_bps:+5d}bps" if basis_bps is not None else "    --   "
-        label = r.get('ticker') or r.get('coin') or '-'
+        label = r.get('ticker') or r.get('coin') or r.get('venue') or '-'
         print(f"{mark} {label:<6} {shown}  {status:<15} {r.get('reason', '')}")
 
     print(
