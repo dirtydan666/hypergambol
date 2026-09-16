@@ -40,7 +40,14 @@ MEASURE = {
     "basis": ("net_after_costs_bps", "bps net of costs"),
     "perps": ("edge_bps", "bps in the called direction"),
     "meta":  ("excess_growth", "x growth vs the launchpad market"),
+    "perps-continuation": ("continuation_edge_bps",
+                           "bps in the continuation direction"),
 }
+
+# PREREGISTRATION.md fixes these in advance so they cannot drift toward
+# whatever the data ends up saying.
+CONTINUATION_MIN_EPISODES = 100
+CONTINUATION_PRIMARY_HORIZON = 72
 
 
 def _regrade(outcome: dict, claim: str | None) -> dict | None:
@@ -93,6 +100,39 @@ def _regrade(outcome: dict, claim: str | None) -> dict | None:
     return row
 
 
+def _continuation_row(outcome: dict, detected_at: int | None) -> dict | None:
+    """
+    The pre-registered inverted hypothesis, counted only out of sample.
+
+    The three days that produced the idea are excluded by construction: an
+    episode detected before the registration timestamp cannot vote on it. That
+    is the whole value of the exercise, so it is enforced in code rather than
+    left to whoever reads the scorecard.
+
+    Graded on exactly the same episodes as the original reversal claim, so
+    neither hypothesis can be handed a favourable selection of events.
+    """
+    if outcome.get("signal") != "perps" or outcome.get("status") != "scored":
+        return None
+
+    registered = outcome.get("hypothesis_registered_at")
+    if registered is None or detected_at is None or detected_at < registered:
+        return None
+
+    correct = outcome.get("continuation_correct")
+    if correct is None:
+        return None
+
+    return {
+        "signal": "perps-continuation",
+        "horizon_hours": outcome.get("horizon_hours"),
+        "claim": "act",
+        "subject": outcome.get("coin") or "?",
+        "verdict": "right" if correct else "wrong",
+        "measure": outcome.get("continuation_edge_bps"),
+    }
+
+
 def build() -> dict:
     candidates = list(store.read(store.CANDIDATES))
     annotated = episodes.annotate(candidates)
@@ -117,13 +157,20 @@ def build() -> dict:
     raw_outcomes = [o for o in store.read(store.OUTCOMES)
                     if o.get("status") == "scored"]
 
+    detected_of = {c["candidate_id"]: c.get("detected_at") for c in annotated
+                   if c.get("candidate_id")}
+
     rows = []
     for o in raw_outcomes:
-        if o.get("candidate_id") not in episode_ids:
+        cid = o.get("candidate_id")
+        if cid not in episode_ids:
             continue
-        row = _regrade(o, claim_of.get(o.get("candidate_id")))
+        row = _regrade(o, claim_of.get(cid))
         if row:
             rows.append(row)
+        extra = _continuation_row(o, detected_of.get(cid))
+        if extra:
+            rows.append(extra)
 
     buckets: dict = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
     for row in rows:
@@ -218,8 +265,21 @@ def to_markdown(report: dict) -> str:
                   "pays; **abstain** says staying out is right. They are "
                   "different assertions and never share a hit rate."]
         for signal, block in report["scorecard"].items():
-            lines += ["", f"#### {signal} _({block['unit']})_", "",
-                      "| Claim | Horizon | Calls | Subjects | Right | Wrong | "
+            lines += ["", f"#### {signal} _({block['unit']})_", ""]
+            if signal == "perps-continuation":
+                primary = block["claims"].get("act", {}).get(
+                    CONTINUATION_PRIMARY_HORIZON, {})
+                n = primary.get("episodes_graded", 0)
+                lines += [
+                    "Pre-registered 2026-09-16T19:00:00Z, before any of these "
+                    "episodes existed - see PREREGISTRATION.md. Out-of-sample "
+                    "only: the three days that generated the idea are excluded "
+                    "in code, not by convention.",
+                    "",
+                    f"**No verdict until {CONTINUATION_MIN_EPISODES} episodes "
+                    f"at {CONTINUATION_PRIMARY_HORIZON}h. Currently {n}.**",
+                    ""]
+            lines += ["| Claim | Horizon | Calls | Subjects | Right | Wrong | "
                       "No value | Hit rate | Mean |",
                       "|---|---:|---:|---:|---:|---:|---:|---:|---:|"]
             for claim, horizons in block["claims"].items():
