@@ -42,6 +42,18 @@ HORIZONS_HOURS = [4, 24, 72]
 # liquid markets, and equal to the median, p25, p75 and p95 simultaneously.
 FUNDING_CLAMP = 0.0000125
 
+# --------------------------------------------------------------------------
+# The continuation hypothesis - pre-registered, see PREREGISTRATION.md
+# --------------------------------------------------------------------------
+# Three days of data said this signal is not merely useless at 72h but reliably
+# WRONG: 9 correct out of 44. The inverted claim - that crowded funding predicts
+# continuation rather than reversal - is plausible and untested, so it is
+# registered with a timestamp rather than traded on the data that produced it.
+#
+# Every episode detected at or after this instant counts toward that test.
+# Everything before it generated the idea and is excluded from its evidence.
+HYPOTHESIS_REGISTERED_AT = 1789585200  # 2026-09-16T19:00:00Z
+
 # How far past the clamp funding must go before long crowding is real.
 CLAMP_BREAK_MULTIPLE = 1.5
 
@@ -238,7 +250,19 @@ def score(candidate: dict, horizon_hours: int) -> dict | None:
 
     ret = row["mark"] / entry - 1
     expected_down = candidate.get("expected_direction") == "down"
-    correct = (ret < 0) if expected_down else (ret > 0)
+
+    # A flat print confirms neither hypothesis. Calling it a win for one side
+    # would hand that side a free point on every stale mark.
+    if ret == 0:
+        correct = None
+        continuation = None
+    else:
+        correct = (ret < 0) if expected_down else (ret > 0)
+        continuation = not correct
+
+    # Signed so that positive always means the call was right, whichever way it
+    # pointed. This is the number the scorecard averages.
+    edge_bps = round((-ret if expected_down else ret) * 10_000)
 
     return {
         "candidate_id": candidate["candidate_id"],
@@ -252,11 +276,16 @@ def score(candidate: dict, horizon_hours: int) -> dict | None:
         "exit_mark": row["mark"],
         "return_bps": round(ret * 10_000),
         "expected_direction": candidate.get("expected_direction"),
-        # Signed so that positive always means the call was right, whichever
-        # way it pointed. This is the number the scorecard averages.
-        "edge_bps": round((-ret if expected_down else ret) * 10_000),
+        "edge_bps": edge_bps,
         "correct": correct,
         "profitable": correct,
+        # The inverted claim, graded on the SAME event as the original so that
+        # neither hypothesis can be handed a favourable selection of episodes.
+        # Counted only from HYPOTHESIS_REGISTERED_AT onward - report.py enforces
+        # that, and PREREGISTRATION.md fixed the criteria in advance.
+        "continuation_correct": continuation,
+        "continuation_edge_bps": None if continuation is None else -edge_bps,
+        "hypothesis_registered_at": HYPOTHESIS_REGISTERED_AT,
         "funding_then": candidate.get("funding"),
         "funding_now": row["funding"],
         "funding_normalised": abs(row["funding"] - FUNDING_CLAMP) < abs(
