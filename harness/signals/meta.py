@@ -62,6 +62,16 @@ MOMENTUM_COLD = 0.33
 # reporting artifact, not a real day.
 MAX_PLAUSIBLE_MOMENTUM = 20.0
 
+# --------------------------------------------------------------------------
+# Grading
+# --------------------------------------------------------------------------
+# How much faster than the whole launchpad market a venue has to grow before
+# the rotation call is credited with having said anything. The first scorecard
+# graded "did share go up at all", which a venue that did literally nothing
+# passes - and 100% of calls duly passed. A margin is what turns a description
+# into a prediction.
+EXCESS_GROWTH_MARGIN = 0.10
+
 
 def _candidate_id(name: str, ts: int) -> str:
     return hashlib.sha1(f"{SIGNAL}:{name}:{ts}".encode()).hexdigest()[:16]
@@ -285,31 +295,71 @@ def score(candidate: dict, horizon_hours: int) -> dict | None:
 
     share = row["fees_24h"] / market_today * 100
     entry_share = candidate.get("entry_share_pct") or 0.0
-    change_pp = share - entry_share
 
-    kind = candidate.get("kind")
-    if kind in ("rotation_in", "new_entrant"):
-        held = change_pp >= 0
-    elif kind == "rotation_out":
-        held = change_pp <= 0
-    else:
-        held = None
+    verdict, excess = assess(candidate.get("kind"), entry_share, share)
 
     return {
         "candidate_id": candidate["candidate_id"],
         "signal": SIGNAL,
         "venue": venue,
-        "kind": kind,
+        "kind": candidate.get("kind"),
         "horizon_hours": horizon_hours,
         "scored_at": int(time.time()),
-        "status": "scored",
+        "status": "scored" if verdict is not None else "ungradeable",
         "entry_share_pct": round(entry_share, 3),
         "exit_share_pct": round(share, 3),
-        "share_change_pp": round(change_pp, 3),
-        # Signed so positive always means the call was right.
-        "edge_bps": round((change_pp if kind != "rotation_out" else -change_pp) * 100),
-        "correct": held,
-        "profitable": held,
+        "share_change_pp": round(share - entry_share, 3),
+        # Growth relative to the whole launchpad market. 1.0 means the venue
+        # moved exactly with the market and the call added nothing.
+        "excess_growth": None if excess is None else round(excess, 3),
+        "excess_pct": None if excess is None else round((excess - 1) * 100, 2),
+        "verdict": verdict,
+        "correct": verdict == "right",
+        "profitable": verdict == "right",
         "fees_then": candidate.get("fees_24h"),
         "fees_now": round(row["fees_24h"]),
+        # Deliberately NO edge_bps. The old one was share points dressed up in a
+        # money unit and averaged in the same column as real P&L: the "+392bps"
+        # on the first scorecard was 3.92 points of market share, not 3.92%.
+        "unit": "excess_growth_vs_market",
     }
+
+
+def assess(kind: str | None, entry_share: float, exit_share: float):
+    """
+    Did the rotation beat the market, or just ride it?
+
+    Share is fees over market fees, so the RATIO of two shares is already the
+    venue's growth divided by the market's growth:
+
+        S1/S0 == (v1/v0) / (m1/m0)
+
+    That single number is the benchmark. Above 1.0 the venue outgrew the whole
+    launchpad market; below it, the venue was carried or left behind by a move
+    that had nothing to do with this call. The old scorer used the DIFFERENCE
+    of shares and asked only whether it was non-negative, which is why it
+    returned 100%.
+
+    Pure and takes only stored fields, so old outcomes can be re-graded from
+    the existing log without refetching anything.
+    """
+    if not entry_share or entry_share <= 0 or exit_share is None:
+        return None, None
+
+    excess = exit_share / entry_share
+
+    if kind in ("rotation_in", "new_entrant"):
+        if excess >= 1 + EXCESS_GROWTH_MARGIN:
+            return "right", excess
+        if excess <= 1 - EXCESS_GROWTH_MARGIN:
+            return "wrong", excess
+        return "no_value", excess
+
+    if kind == "rotation_out":
+        if excess <= 1 - EXCESS_GROWTH_MARGIN:
+            return "right", excess
+        if excess >= 1 + EXCESS_GROWTH_MARGIN:
+            return "wrong", excess
+        return "no_value", excess
+
+    return None, excess
