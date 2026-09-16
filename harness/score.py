@@ -52,6 +52,9 @@ def main() -> int:
         module = SIGNALS.get(signal)
         if module is None:
             continue
+        # Same rule as the report: never index a key straight off a log record.
+        if not candidate.get("candidate_id") or not candidate.get("detected_at"):
+            continue
 
         for horizon in HORIZONS.get(signal, []):
             key = f"{candidate['candidate_id']}@{horizon}"
