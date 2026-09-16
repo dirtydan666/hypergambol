@@ -97,8 +97,14 @@ def build() -> dict:
     candidates = list(store.read(store.CANDIDATES))
     annotated = episodes.annotate(candidates)
 
-    episode_ids = {c["candidate_id"] for c in annotated if c.get("episode_start")}
-    claim_of = {c["candidate_id"]: c.get("claim") for c in annotated}
+    # .get, not [], on every record in the log. Twice now a direct index on a
+    # key one signal happened not to write has failed the job AFTER the work was
+    # done - which loses the whole run, silently. A record with no id simply
+    # cannot be joined to an outcome, so skipping it is also the right answer.
+    episode_ids = {c["candidate_id"] for c in annotated
+                   if c.get("episode_start") and c.get("candidate_id")}
+    claim_of = {c["candidate_id"]: c.get("claim") for c in annotated
+                if c.get("candidate_id")}
 
     by_status = Counter(c.get("status") for c in candidates)
     rejects_by_check = Counter()
@@ -156,7 +162,7 @@ def build() -> dict:
     summary = episodes.summarise(candidates)
 
     return {
-        "generated_at": max((c["detected_at"] for c in candidates), default=0),
+        "generated_at": max((c.get("detected_at") or 0 for c in candidates), default=0),
         "captures": len(candidates),
         "status_counts": dict(by_status),
         "rejections_by_check": dict(rejects_by_check),
