@@ -1,33 +1,33 @@
 {
-  "captures": 40874,
+  "captures": 40887,
   "cost_floor_bps": 78,
   "episodes": {
-    "claimable_records": 35353,
+    "claimable_records": 35363,
     "distinct_subjects": 101,
     "episodes": 2363,
     "repetition_factor": 15.0
   },
-  "generated_at": 1791667768,
+  "generated_at": 1791668824,
   "grading": {
-    "after_deduplication": 11612,
+    "after_deduplication": 11616,
     "note": "One situation is graded once. The rest of the log is kept and readable; it is observation, not prediction.",
-    "raw_outcomes": 11222
+    "raw_outcomes": 11224
   },
   "latest": {
     "basis:AAPL": {
-      "candidate_id": "aa779d1888213a75",
+      "candidate_id": "f1751e82bea3b6c6",
       "chain": "solana",
       "claim": "abstain",
       "cost_floor": 0.0078,
-      "detected_at": 1791667766,
+      "detected_at": 1791668822,
       "episode_start": false,
-      "gross_basis": 0.003899,
-      "gross_basis_bps": 39,
+      "gross_basis": 0.003959,
+      "gross_basis_bps": 40,
       "mint": "XsbEhLAtcf6HdfpFZ5xEMdqW8nfAvcsP5bdudRLJzJp",
-      "reason": "0.39% gap under 0.78% cost floor",
+      "reason": "0.40% gap under 0.78% cost floor",
       "reference": {
         "kind": "perp_mid",
-        "price": 335.98,
+        "price": 335.96,
         "source": "hyperliquid:xyz:AAPL"
       },
       "signal": "basis",
@@ -42,36 +42,36 @@
             "value": 2.0
           },
           {
-            "detail": "0.09% spread across 2 pools (limit 0.5%)",
+            "detail": "0.07% spread across 2 pools (limit 0.5%)",
             "name": "pool_dispersion",
             "passed": true,
-            "value": 0.000919
+            "value": 0.000688
           },
           {
-            "detail": "pools 337.29 vs provider 337.16 (0.04% apart)",
+            "detail": "pools 337.29 vs provider 337.31 (0.01% apart)",
             "name": "provider_agreement",
             "passed": true,
-            "value": 0.000386
+            "value": 5.9e-05
           },
           {
-            "detail": "prior 337.29 sits inside the implied path [337.29, 337.58] +/- 6.75",
+            "detail": "prior 337.29 sits inside the implied path [337.29, 337.48] +/- 6.75",
             "name": "drift_corroboration",
             "passed": true,
             "value": 0.0
           }
         ],
-        "dispersion": 0.000919,
+        "dispersion": 0.000688,
         "failed": [],
         "mint": "XsbEhLAtcf6HdfpFZ5xEMdqW8nfAvcsP5bdudRLJzJp",
         "ok": true,
         "pool_count": 2,
         "price": 337.29,
         "providers": {
-          "coingecko": 337.16,
+          "coingecko": 337.31,
           "pools": 337.29
         },
-        "total_liquidity": 592098.71,
-        "total_volume_24h": 52073.97
+        "total_liquidity": 592124.38,
+        "total_volume_24h": 52966.23
       },
       "version": 1
     },
@@ -110,13 +110,13 @@
       "version": 1
     },
     "basis:HOOD": {
-      "candidate_id": "d930439d788e3469",
+      "candidate_id": "8e5dad037b536dca",
       "chain": "solana",
       "claim": null,
-      "detected_at": 1791667766,
+      "detected_at": 1791668822,
       "episode_start": false,
       "mint": "XsvNBAYkrDRNhA7wPHQfX3ZUXZyZLdnCQDfHZ56bzpg",
-      "reason": "failed provider_agreement",
+      "reason": "failed pool_dispersion,provider_agreement",
       "signal": "basis",
       "status": "rejected",
       "ticker": "HOOD",
@@ -129,26 +129,27 @@
             "value": 2.0
           },
           {
-            "detail": "0.40% spread across 2 pools (limit 0.5%)",
+            "detail": "0.75% spread across 2 pools (limit 0.5%)",
             "name": "pool_dispersion",
-            "passed": true,
-            "value": 0.004048
+            "passed": false,
+            "value": 0.007544
           },
           {
-            "detail": "pools 108.70 vs provider 109.43 (0.67% apart)",
+            "detail": "pools 108.70 vs provider 109.55 (0.78% apart)",
             "name": "provider_agreement",
             "passed": false,
-            "value": 0.006671
+            "value": 0.007759
           },
           {
-            "detail": "prior 108.70 sits inside the implied path [108.63, 108.70] +/- 2.17",
+            "detail": "prior 108.70 sits inside the implied path [108.44, 108.70] +/- 2.17",
             "name": "drift_corroboration",
             "passed": true,
             "value": 0.0
           }
         ],
-        "dispersion": 0.004048,
+        "dispersion": 0.007544,
         "failed": [
+          "pool_dispersion",
           "provider_agreement"
         ],
         "mint": "XsvNBAYkrDRNhA7wPHQfX3ZUXZyZLdnCQDfHZ56bzpg",
@@ -156,28 +157,28 @@
         "pool_count": 2,
         "price": 108.7,
         "providers": {
-          "coingecko": 109.43,
+          "coingecko": 109.55,
           "pools": 108.7
         },
-        "total_liquidity": 1515033.13,
-        "total_volume_24h": 10329.71
+        "total_liquidity": 1515206.84,
+        "total_volume_24h": 10687.83
       },
       "version": 1
     },
     "basis:NVDA": {
-      "candidate_id": "b18734e6427166b9",
+      "candidate_id": "30d372df4a8c3254",
       "chain": "solana",
       "claim": "abstain",
       "cost_floor": 0.0078,
-      "detected_at": 1791667766,
+      "detected_at": 1791668822,
       "episode_start": false,
-      "gross_basis": 0.002758,
-      "gross_basis_bps": 28,
+      "gross_basis": 0.002496,
+      "gross_basis_bps": 25,
       "mint": "Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh",
-      "reason": "0.28% gap under 0.78% cost floor",
+      "reason": "0.25% gap under 0.78% cost floor",
       "reference": {
         "kind": "perp_mid",
-        "price": 230.255,
+        "price": 230.335,
         "source": "hyperliquid:xyz:NVDA"
       },
       "signal": "basis",
@@ -192,36 +193,36 @@
             "value": 3.0
           },
           {
-            "detail": "0.10% spread across 3 pools (limit 0.5%)",
+            "detail": "0.11% spread across 3 pools (limit 0.5%)",
             "name": "pool_dispersion",
             "passed": true,
-            "value": 0.001039
+            "value": 0.001126
           },
           {
-            "detail": "pools 230.89 vs provider 230.81 (0.03% apart)",
+            "detail": "pools 230.91 vs provider 230.82 (0.04% apart)",
             "name": "provider_agreement",
             "passed": true,
-            "value": 0.000347
+            "value": 0.00039
           },
           {
-            "detail": "prior 230.89 sits inside the implied path [230.22, 230.89] +/- 4.62",
+            "detail": "prior 230.89 sits inside the implied path [230.06, 230.91] +/- 4.62",
             "name": "drift_corroboration",
             "passed": true,
             "value": 0.0
           }
         ],
-        "dispersion": 0.001039,
+        "dispersion": 0.001126,
         "failed": [],
         "mint": "Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh",
         "ok": true,
         "pool_count": 3,
-        "price": 230.89,
+        "price": 230.91,
         "providers": {
-          "coingecko": 230.81,
-          "pools": 230.89
+          "coingecko": 230.82,
+          "pools": 230.91
         },
-        "total_liquidity": 3897660.81,
-        "total_volume_24h": 2063260.74
+        "total_liquidity": 3897907.73,
+        "total_volume_24h": 2179647.41
       },
       "version": 1
     },
@@ -278,19 +279,19 @@
       "version": 1
     },
     "basis:TSLA": {
-      "candidate_id": "8624a9487b8c1b92",
+      "candidate_id": "7cc27727aca3caf4",
       "chain": "solana",
       "claim": "abstain",
       "cost_floor": 0.0078,
-      "detected_at": 1791667766,
+      "detected_at": 1791668822,
       "episode_start": false,
-      "gross_basis": 0.000196,
-      "gross_basis_bps": 2,
+      "gross_basis": -0.000954,
+      "gross_basis_bps": -10,
       "mint": "XsDoVfqeBukxuZHWhdvWHBhgEHjGNst4MLodqsJHzoB",
-      "reason": "0.02% gap under 0.78% cost floor",
+      "reason": "0.10% gap under 0.78% cost floor",
       "reference": {
         "kind": "perp_mid",
-        "price": 382.335,
+        "price": 382.725,
         "source": "hyperliquid:xyz:TSLA"
       },
       "signal": "basis",
@@ -305,36 +306,36 @@
             "value": 3.0
           },
           {
-            "detail": "0.15% spread across 3 pools (limit 0.5%)",
+            "detail": "0.16% spread across 3 pools (limit 0.5%)",
             "name": "pool_dispersion",
             "passed": true,
-            "value": 0.001517
+            "value": 0.001569
           },
           {
-            "detail": "pools 382.41 vs provider 382.35 (0.02% apart)",
+            "detail": "pools 382.36 vs provider 382.46 (0.03% apart)",
             "name": "provider_agreement",
             "passed": true,
-            "value": 0.000157
+            "value": 0.000261
           },
           {
-            "detail": "prior 382.44 sits inside the implied path [382.41, 382.56] +/- 7.65",
+            "detail": "prior 382.41 sits inside the implied path [382.36, 382.51] +/- 7.65",
             "name": "drift_corroboration",
             "passed": true,
             "value": 0.0
           }
         ],
-        "dispersion": 0.001517,
+        "dispersion": 0.001569,
         "failed": [],
         "mint": "XsDoVfqeBukxuZHWhdvWHBhgEHjGNst4MLodqsJHzoB",
         "ok": true,
         "pool_count": 3,
-        "price": 382.41,
+        "price": 382.36,
         "providers": {
-          "coingecko": 382.35,
-          "pools": 382.41
+          "coingecko": 382.46,
+          "pools": 382.36
         },
-        "total_liquidity": 2828897.38,
-        "total_volume_24h": 396176.0
+        "total_liquidity": 2828642.38,
+        "total_volume_24h": 398661.5
       },
       "version": 1
     },
@@ -622,9 +623,9 @@
       "version": 1
     },
     "meta:market_summary": {
-      "candidate_id": "6e47df9de297bdcc",
+      "candidate_id": "7ed467788fb2f352",
       "claim": null,
-      "detected_at": 1791667768,
+      "detected_at": 1791668824,
       "episode_start": false,
       "leaderboard": [
         {
@@ -880,22 +881,22 @@
       "version": 1
     },
     "perps:ASTER": {
-      "annualised_funding": -0.0248,
-      "candidate_id": "0e73c26db94c9b10",
+      "annualised_funding": -0.015,
+      "candidate_id": "3b976cbad5f2912b",
       "claim": "act",
       "coin": "ASTER",
-      "day_change": 0.02404,
-      "day_volume_usd": 2231044,
-      "detected_at": 1791667767,
-      "entry_mark": 0.71169,
+      "day_change": 0.01874,
+      "day_volume_usd": 1915685,
+      "detected_at": 1791668824,
+      "entry_mark": 0.7115,
       "episode_start": false,
       "expected_direction": "up",
-      "funding": -2.8315e-06,
-      "funding_vs_clamp": -0.227,
+      "funding": -1.7167e-06,
+      "funding_vs_clamp": -0.137,
       "kind": "crowded_short",
-      "open_interest_usd": 26550468,
-      "premium": -0.0004970863,
-      "reason": "crowded_short: funding -2.5%/yr, -0.23x the clamp",
+      "open_interest_usd": 26548353,
+      "premium": -0.000369408,
+      "reason": "crowded_short: funding -1.5%/yr, -0.14x the clamp",
       "signal": "perps",
       "status": "fired",
       "version": 1
@@ -964,22 +965,22 @@
       "version": 1
     },
     "perps:BTC": {
-      "annualised_funding": -0.0184,
-      "candidate_id": "2fa50b5bfa5659ec",
+      "annualised_funding": -0.0207,
+      "candidate_id": "28ce3be381f82a99",
       "claim": "act",
       "coin": "BTC",
-      "day_change": 0.00563,
-      "day_volume_usd": 809672826,
-      "detected_at": 1791667767,
-      "entry_mark": 83004.0,
+      "day_change": 0.00642,
+      "day_volume_usd": 798288483,
+      "detected_at": 1791668824,
+      "entry_mark": 83040.0,
       "episode_start": false,
       "expected_direction": "up",
-      "funding": -2.101e-06,
-      "funding_vs_clamp": -0.168,
+      "funding": -2.3585e-06,
+      "funding_vs_clamp": -0.189,
       "kind": "crowded_short",
-      "open_interest_usd": 3196240860,
-      "premium": -0.0005418553,
-      "reason": "crowded_short: funding -1.8%/yr, -0.17x the clamp",
+      "open_interest_usd": 3197811269,
+      "premium": -0.0006138144,
+      "reason": "crowded_short: funding -2.1%/yr, -0.19x the clamp",
       "signal": "perps",
       "status": "fired",
       "version": 1
@@ -1216,22 +1217,22 @@
       "version": 1
     },
     "perps:ETH": {
-      "annualised_funding": -0.03,
-      "candidate_id": "e57a033fea267f1e",
+      "annualised_funding": -0.0408,
+      "candidate_id": "5c412cb18f905994",
       "claim": "act",
       "coin": "ETH",
-      "day_change": 0.00918,
-      "day_volume_usd": 506642756,
-      "detected_at": 1791667767,
-      "entry_mark": 2505.8,
+      "day_change": 0.01051,
+      "day_volume_usd": 550236431,
+      "detected_at": 1791668824,
+      "entry_mark": 2509.9,
       "episode_start": false,
       "expected_direction": "up",
-      "funding": -3.426e-06,
-      "funding_vs_clamp": -0.274,
+      "funding": -4.6526e-06,
+      "funding_vs_clamp": -0.372,
       "kind": "crowded_short",
-      "open_interest_usd": 2824189738,
-      "premium": -0.0007178465,
-      "reason": "crowded_short: funding -3.0%/yr, -0.27x the clamp",
+      "open_interest_usd": 2839760530,
+      "premium": -0.0003384903,
+      "reason": "crowded_short: funding -4.1%/yr, -0.37x the clamp",
       "signal": "perps",
       "status": "fired",
       "version": 1
@@ -1641,22 +1642,22 @@
       "version": 1
     },
     "perps:MET": {
-      "annualised_funding": -0.3893,
-      "candidate_id": "df669e63271e5975",
+      "annualised_funding": -0.3611,
+      "candidate_id": "f47854d5a5f8387f",
       "claim": "act",
       "coin": "MET",
-      "day_change": 0.04141,
-      "day_volume_usd": 3996575,
-      "detected_at": 1791667767,
-      "entry_mark": 0.42574,
+      "day_change": 0.04334,
+      "day_volume_usd": 3988816,
+      "detected_at": 1791668824,
+      "entry_mark": 0.4261,
       "episode_start": false,
       "expected_direction": "up",
-      "funding": -4.44389e-05,
-      "funding_vs_clamp": -3.555,
+      "funding": -4.12242e-05,
+      "funding_vs_clamp": -3.298,
       "kind": "crowded_short",
-      "open_interest_usd": 7655910,
-      "premium": -0.0004855337,
-      "reason": "crowded_short: funding -38.9%/yr, -3.56x the clamp",
+      "open_interest_usd": 7663272,
+      "premium": -0.0004217926,
+      "reason": "crowded_short: funding -36.1%/yr, -3.30x the clamp",
       "signal": "perps",
       "status": "fired",
       "version": 1
@@ -2191,22 +2192,22 @@
       "version": 1
     },
     "perps:SUI": {
-      "annualised_funding": -0.0365,
-      "candidate_id": "f18f94fb71539a40",
+      "annualised_funding": -0.0164,
+      "candidate_id": "aa476e24aa462763",
       "claim": "act",
       "coin": "SUI",
-      "day_change": 0.05258,
-      "day_volume_usd": 24799874,
-      "detected_at": 1791667767,
-      "entry_mark": 1.121,
+      "day_change": 0.05093,
+      "day_volume_usd": 24950741,
+      "detected_at": 1791668824,
+      "entry_mark": 1.1204,
       "episode_start": false,
       "expected_direction": "up",
-      "funding": -4.167e-06,
-      "funding_vs_clamp": -0.333,
+      "funding": -1.8708e-06,
+      "funding_vs_clamp": -0.15,
       "kind": "crowded_short",
-      "open_interest_usd": 72225080,
-      "premium": -0.0005171184,
-      "reason": "crowded_short: funding -3.7%/yr, -0.33x the clamp",
+      "open_interest_usd": 71993308,
+      "premium": -0.0004549388,
+      "reason": "crowded_short: funding -1.6%/yr, -0.15x the clamp",
       "signal": "perps",
       "status": "fired",
       "version": 1
@@ -2296,22 +2297,22 @@
       "version": 1
     },
     "perps:TRX": {
-      "annualised_funding": -0.0228,
-      "candidate_id": "3762dc70f317248d",
+      "annualised_funding": -0.0487,
+      "candidate_id": "8e8264febee90ae6",
       "claim": "act",
       "coin": "TRX",
-      "day_change": -0.00307,
-      "day_volume_usd": 1671971,
-      "detected_at": 1791667767,
-      "entry_mark": 0.33074,
+      "day_change": -0.0038,
+      "day_volume_usd": 1673630,
+      "detected_at": 1791668824,
+      "entry_mark": 0.3307,
       "episode_start": false,
       "expected_direction": "up",
-      "funding": -2.6031e-06,
-      "funding_vs_clamp": -0.208,
+      "funding": -5.5542e-06,
+      "funding_vs_clamp": -0.444,
       "kind": "crowded_short",
-      "open_interest_usd": 14146729,
-      "premium": -0.000519716,
-      "reason": "crowded_short: funding -2.3%/yr, -0.21x the clamp",
+      "open_interest_usd": 14148559,
+      "premium": -0.0006043209,
+      "reason": "crowded_short: funding -4.9%/yr, -0.44x the clamp",
       "signal": "perps",
       "status": "fired",
       "version": 1
@@ -2406,22 +2407,22 @@
       "version": 1
     },
     "perps:VVV": {
-      "annualised_funding": 0.3017,
-      "candidate_id": "36d2568e6e0b9e58",
+      "annualised_funding": 0.3357,
+      "candidate_id": "040f835a3df2b71b",
       "claim": "act",
       "coin": "VVV",
-      "day_change": 0.06039,
-      "day_volume_usd": 16098430,
-      "detected_at": 1791667767,
-      "entry_mark": 23.072,
-      "episode_start": true,
+      "day_change": 0.06521,
+      "day_volume_usd": 17979824,
+      "detected_at": 1791668824,
+      "entry_mark": 23.26,
+      "episode_start": false,
       "expected_direction": "down",
-      "funding": 3.44437e-05,
-      "funding_vs_clamp": 2.755,
+      "funding": 3.83229e-05,
+      "funding_vs_clamp": 3.066,
       "kind": "crowded_long",
-      "open_interest_usd": 74445359,
-      "premium": 0.0011498492,
-      "reason": "crowded_long: funding 30.2%/yr, 2.76x the clamp",
+      "open_interest_usd": 75863896,
+      "premium": 0.001248332,
+      "reason": "crowded_long: funding 33.6%/yr, 3.07x the clamp",
       "signal": "perps",
       "status": "fired",
       "version": 1
@@ -2705,26 +2706,26 @@
       "version": 1
     },
     "perps:market_summary": {
-      "at_clamp": 48,
-      "candidate_id": "6d6a0a28867a5686",
+      "at_clamp": 49,
+      "candidate_id": "9d66f39bc99a3021",
       "claim": null,
-      "detected_at": 1791667767,
+      "detected_at": 1791668824,
       "episode_start": false,
       "liquid_markets": 59,
       "negative_funding": 6,
-      "reason": "59 liquid markets, 48 pinned at the funding clamp",
+      "reason": "59 liquid markets, 49 pinned at the funding clamp",
       "signal": "perps",
       "status": "market_summary",
-      "total_day_volume_usd": 2333829784,
-      "total_open_interest_usd": 11813956765,
+      "total_day_volume_usd": 2374898068,
+      "total_open_interest_usd": 11810172614,
       "version": 1
     }
   },
   "rejections_by_check": {
     "depth": 102,
     "drift_corroboration": 89,
-    "pool_dispersion": 537,
-    "provider_agreement": 1114
+    "pool_dispersion": 538,
+    "provider_agreement": 1115
   },
   "scorecard": {
     "basis": {
@@ -2808,13 +2809,13 @@
             "wrong": 867
           },
           "72": {
-            "episodes_graded": 1839,
-            "hit_rate": 0.5427,
-            "mean_measure": 54.206,
+            "episodes_graded": 1841,
+            "hit_rate": 0.5426,
+            "mean_measure": 54.273,
             "no_value": 0,
-            "right": 998,
+            "right": 999,
             "subjects": 79,
-            "wrong": 841
+            "wrong": 842
           }
         }
       },
@@ -2842,13 +2843,13 @@
             "wrong": 1041
           },
           "72": {
-            "episodes_graded": 1606,
+            "episodes_graded": 1608,
             "hit_rate": 0.4689,
-            "mean_measure": 9.978,
+            "mean_measure": 9.822,
             "no_value": 0,
-            "right": 753,
+            "right": 754,
             "subjects": 79,
-            "wrong": 853
+            "wrong": 854
           }
         }
       },
@@ -2856,11 +2857,11 @@
     }
   },
   "status_counts": {
-    "clean_no_trade": 6771,
-    "fired": 28573,
-    "market_summary": 3944,
+    "clean_no_trade": 6774,
+    "fired": 28580,
+    "market_summary": 3946,
     "no_reference": 2,
     "not_fillable": 9,
-    "rejected": 1575
+    "rejected": 1576
   }
 }
